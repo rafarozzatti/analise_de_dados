@@ -1,435 +1,397 @@
-### 1. MySQL
-
-**O que você deve alterar:**
-
-* `host`: endereço do servidor MySQL (normalmente `"localhost"` para local).
-* `user`: seu usuário do MySQL.
-* `password`: sua senha do MySQL.
-* `database`: nome do banco de dados onde está sua tabela (exemplo: `"pizzaria_db"`).
-* `consulta`: a query SQL que deseja executar.
-
-**Como usar:**
-
-* Tenha o MySQL rodando e com as credenciais corretas.
-* Instale o pacote `mysql-connector-python` (`pip install mysql-connector-python`).
-* Execute o script para extrair os dados em CSV.
+## 1. CSV
 
 ```python
-import mysql.connector
+# 1. Importar a biblioteca
 import pandas as pd
 
-conexao = mysql.connector.connect(
-    host="localhost",        # Altere para o IP/hostname do seu servidor
-    user="seu_usuario",      # Seu usuário MySQL
-    password="sua_senha",    # Sua senha MySQL
-    database="pizzaria_db"   # Banco de dados onde estão os dados
-)
-
-consulta = "SELECT * FROM pedidos_pizzaria LIMIT 100;"  # Query SQL para extrair dados
-
-df = pd.read_sql(consulta, conexao)  # Executa query e carrega no DataFrame
-
-df.to_csv("dados_mysql.csv", index=False)  # Salva os dados em CSV
-
-conexao.close()  # Fecha a conexão
-
-print("Dados exportados do MySQL com sucesso!")
-```
-
----
-
-### 2. PostgreSQL
-
-**O que mudar:**
-
-* `host`, `database`, `user`, `password`: credenciais do seu PostgreSQL.
-* `consulta`: query para extrair dados.
-
-**Como usar:**
-
-* PostgreSQL deve estar instalado e rodando.
-* Instale `psycopg2` com `pip install psycopg2-binary`.
-
-```python
-import psycopg2
-import pandas as pd
-
-conexao = psycopg2.connect(
-    host="localhost",
-    database="pizzaria_db",
-    user="seu_usuario",
-    password="sua_senha"
-)
-
-consulta = "SELECT * FROM pedidos_pizzaria LIMIT 100;"
-df = pd.read_sql(consulta, conexao)
-df.to_csv("dados_postgres.csv", index=False)
-
-conexao.close()
-print("Dados exportados do PostgreSQL com sucesso!")
-```
-
----
-
-### 3. SQLite
-
-**O que mudar:**
-
-* `sqlite3.connect`: caminho para o arquivo `.sqlite` do banco local.
-* `consulta`: query para extrair dados.
-
-**Como usar:**
-
-* SQLite é um arquivo local, não precisa de servidor.
-* Instalação extra geralmente não é necessária (vem com Python).
-
-```python
-import sqlite3
-import pandas as pd
-
-conexao = sqlite3.connect('pizzaria_db.sqlite')  # Altere para seu arquivo .sqlite
-
-consulta = "SELECT * FROM pedidos_pizzaria LIMIT 100;"
-df = pd.read_sql(consulta, conexao)
-df.to_csv("dados_sqlite.csv", index=False)
-
-conexao.close()
-print("Dados exportados do SQLite com sucesso!")
-```
-
----
-
-### 4. SQL Server
-
-**O que mudar:**
-
-* Na string de conexão, ajuste `SERVER`, `DATABASE`, `UID` (usuário) e `PWD` (senha).
-* Instale o driver ODBC adequado para seu sistema.
-* `consulta`: query SQL que deseja executar.
-
-**Como usar:**
-
-* Tenha o SQL Server instalado.
-* Instale pacote pyodbc (`pip install pyodbc`).
-* Instale o ODBC Driver 17 (ou versão compatível).
-
-```python
-import pyodbc
-import pandas as pd
-
-conexao = pyodbc.connect(
-    'DRIVER={ODBC Driver 17 for SQL Server};'
-    'SERVER=localhost;'
-    'DATABASE=pizzaria_db;'
-    'UID=seu_usuario;'
-    'PWD=sua_senha'
-)
-
-consulta = "SELECT * FROM pedidos_pizzaria"
-df = pd.read_sql(consulta, conexao)
-df.to_csv("dados_sqlserver.csv", index=False)
-
-conexao.close()
-print("Dados exportados do SQL Server com sucesso!")
-```
-
----
-
-### 5. Oracle
-
-**O que mudar:**
-
-* Substitua `'seu_usuario/sua_senha@localhost:1521/xe'` pelo seu usuário, senha e string de conexão Oracle.
-* Ajuste a query conforme seu banco Oracle (exemplo usa `ROWNUM` para limitar resultados).
-
-**Como usar:**
-
-* Instale o Oracle Instant Client e `cx_Oracle` (`pip install cx_Oracle`).
-* Garanta que o Oracle esteja acessível.
-
-```python
-import cx_Oracle
-import pandas as pd
-
-conexao = cx_Oracle.connect('seu_usuario/sua_senha@localhost:1521/xe')
-
-consulta = "SELECT * FROM pedidos_pizzaria WHERE ROWNUM <= 100"
-df = pd.read_sql(consulta, conexao)
-df.to_csv("dados_oracle.csv", index=False)
-
-conexao.close()
-print("Dados exportados do Oracle com sucesso!")
-```
-
----
-
-### 6. MongoDB
-
-**O que mudar:**
-
-* String de conexão MongoDB no `MongoClient`.
-* `db` e `colecao`: o nome do seu banco e da coleção.
-
-**Como usar:**
-
-* MongoDB deve estar rodando.
-* Instale `pymongo` (`pip install pymongo`).
-
-```python
-from pymongo import MongoClient
-import pandas as pd
-
-cliente = MongoClient("mongodb://localhost:27017/")
-db = cliente["pizzaria_db"]          # Seu banco MongoDB
-colecao = db["pedidos_pizzaria"]     # Sua coleção
-
-dados = list(colecao.find().limit(100))  # Pega os primeiros 100 documentos
-df = pd.json_normalize(dados)            # Transforma para DataFrame Pandas
-df.to_csv("dados_mongodb.csv", index=False)
-
-cliente.close()
-print("Dados exportados do MongoDB com sucesso!")
-```
-
----
-
-### 7. Excel com filtro
-
-**O que mudar:**
-
-* `caminho_arquivo`: caminho do seu arquivo Excel.
-* `nome_aba`: nome ou índice da planilha.
-* A query de filtro em `.query(...)` pode ser ajustada conforme quiser.
-
-**Como usar:**
-
-* Instale `pandas` e `openpyxl` (`pip install pandas openpyxl`).
-* Execute para filtrar dados e salvar CSV.
-
-```python
-import pandas as pd
-
-caminho_arquivo = 'vendas.xlsx'  # Caminho do arquivo Excel
-nome_aba = 'Planilha1'           # Nome ou índice da planilha
-
-df = pd.read_excel(caminho_arquivo, sheet_name=nome_aba)
-
-print("Prévia dos dados:")
+# 2. Ler (extrair) o arquivo CSV
+df = pd.read_csv("dados.csv")
+
+# Mostrar informações do DataFrame original (antes do filtro)
+df.info()
 print(df.head())
 
-print("\nInformações dos dados:")
-print(df.info())
-
-# Exemplo: filtro por valor_total maior que 100
+# 3. Filtrar os dados (ex: só vendas com valor_total > 100)
 df_filtrado = df.query("valor_total > 100")
 
-print("\nDados filtrados (valor_total > 100):")
+# Mostrar informações do DataFrame filtrado
+df_filtrado.info()
 print(df_filtrado.head())
 
-df_filtrado.to_csv("dados_filtrados.csv", index=False)
-print("Arquivo CSV filtrado exportado com sucesso!")
-```
----
-
-## 8. Extração de **CSV**
-
-```python
-import pandas as pd
-
-caminho_arquivo = 'dados.csv'  # Caminho do arquivo CSV
-
-df = pd.read_csv(caminho_arquivo)
-
-print("Prévia dos dados:")
-print(df.head())
-
-print("\nInformações dos dados:")
-print(df.info())
-
-# Exemplo: filtro por valor_total maior que 100
-df_filtrado = df.query("valor_total > 100")
-
-print("\nDados filtrados (valor_total > 100):")
-print(df_filtrado.head())
-
+# 4. Salvar o novo DataFrame filtrado em um novo arquivo CSV
 df_filtrado.to_csv("dados_filtrados_csv.csv", index=False)
-print("Arquivo CSV filtrado exportado com sucesso!")
 ```
 
-**Explicações:**
+**O que mudar:**
 
-* `pd.read_csv(...)`: carrega o arquivo CSV para o DataFrame.
-* `df.head()`: mostra as primeiras linhas para pré-visualizar os dados.
-* `df.info()`: exibe o resumo da estrutura dos dados (colunas, tipos, nulos).
-* `df.query(...)`: filtra o DataFrame (nesse caso, apenas onde o valor\_total > 100).
-* `df.to_csv(...)`: exporta os dados filtrados para um novo CSV.
+* `"dados.csv"` → arquivo CSV que você quer ler.
+* A condição dentro do `query()` → filtro desejado para os dados.
+* `"dados_filtrados_csv.csv"` → nome do arquivo CSV de saída.
 
 ---
 
-## 9. Extração de **JSON Local**
+## 2. Excel
 
 ```python
+# 1. Importar a biblioteca
 import pandas as pd
 
-caminho_arquivo = 'dados.json'  # Caminho do arquivo JSON
+# 2. Ler (extrair) o arquivo Excel
+df = pd.read_excel("dados.xlsx")
 
-df = pd.read_json(caminho_arquivo)
-
-print("Prévia dos dados:")
+# Mostrar informações do DataFrame original (antes do filtro)
+df.info()
 print(df.head())
 
-print("\nInformações dos dados:")
-print(df.info())
-
-# Exemplo: filtro por valor_total maior que 100
+# 3. Filtrar os dados (ex: só vendas com valor_total > 100)
 df_filtrado = df.query("valor_total > 100")
 
-print("\nDados filtrados (valor_total > 100):")
+# Mostrar informações do DataFrame filtrado
+df_filtrado.info()
 print(df_filtrado.head())
 
-df_filtrado.to_csv("dados_filtrados_json.csv", index=False)
-print("Arquivo CSV filtrado exportado com sucesso!")
+# 4. Salvar o novo DataFrame filtrado em um arquivo Excel
+df_filtrado.to_excel("dados_filtrados_excel.xlsx", index=False)
 ```
 
-**Explicações:**
+**O que mudar:**
 
-* `pd.read_json(...)`: carrega arquivos JSON locais, assumindo que estejam no formato "flat" (sem estrutura aninhada).
-* Ideal para dados exportados de APIs ou sistemas.
-* O processo de limpeza e exportação segue o mesmo padrão.
+* `"dados.xlsx"` → arquivo Excel de entrada.
+* Condição do `query()`.
+* `"dados_filtrados_excel.xlsx"` → arquivo Excel de saída.
 
 ---
 
-## 10. Extração de **API (JSON da Internet)**
+## 3. JSON (local)
 
 ```python
-import pandas as pd
-import requests
-
-url = 'https://jsonplaceholder.typicode.com/posts'  # API de teste
-
-resposta = requests.get(url)
-
-if resposta.status_code == 200:
-    dados = resposta.json()
-    df = pd.DataFrame(dados)
-
-    print("Prévia dos dados:")
-    print(df.head())
-
-    print("\nInformações dos dados:")
-    print(df.info())
-
-    # Exemplo: filtro por userId igual a 1
-    df_filtrado = df.query("userId == 1")
-
-    print("\nDados filtrados (userId == 1):")
-    print(df_filtrado.head())
-
-    df_filtrado.to_csv("dados_filtrados_api.csv", index=False)
-    print("Arquivo CSV filtrado exportado com sucesso!")
-
-else:
-    print("Erro ao acessar a API:", resposta.status_code)
-```
-
-**Explicações:**
-
-* `requests.get(...)`: envia uma requisição HTTP para a URL da API.
-* `resposta.json()`: extrai os dados no formato JSON.
-* `pd.DataFrame(dados)`: transforma os dados JSON em DataFrame.
-* `query(...)`: aplica o filtro diretamente como uma consulta.
-* `to_csv(...)`: exporta os dados para uso em Power BI ou Excel.
-
----
-
-# Conexão com MongoDB e extração de dados em Python (local e remoto)
-
----
-
-## 1. MongoDB Local
-
-```python
-from pymongo import MongoClient
+# 1. Importar a biblioteca
 import pandas as pd
 
-# Conecta ao MongoDB rodando localmente na porta padrão 27017
-cliente = MongoClient("mongodb://localhost:27017/")
+# 2. Ler (extrair) o arquivo JSON local
+df = pd.read_json("dados.json")
 
-# Seleciona o banco de dados
-db = cliente["nome_do_banco"]
-
-# Seleciona a coleção (equivalente à tabela)
-colecao = db["nome_da_colecao"]
-
-# Busca até 100 documentos da coleção
-dados = list(colecao.find().limit(100))
-
-# Converte os documentos JSON para DataFrame do pandas
-df = pd.json_normalize(dados)
-
-# Mostra as primeiras linhas
+# Mostrar informações do DataFrame original (antes do filtro)
+df.info()
 print(df.head())
 
-# Salva em CSV para análise ou importação no Power BI
-df.to_csv("dados_mongodb_local.csv", index=False)
+# 3. Filtrar os dados (ex: só vendas com valor_total > 100)
+df_filtrado = df.query("valor_total > 100")
 
-print("Exportação local finalizada!")
+# Mostrar informações do DataFrame filtrado
+df_filtrado.info()
+print(df_filtrado.head())
 
-# Fecha a conexão
-cliente.close()
+# 4. Salvar o novo DataFrame filtrado em arquivo JSON
+df_filtrado.to_json("dados_filtrados_json.json", orient="records")
 ```
 
-### O que mudar para usar:
+**O que mudar:**
 
-* **`localhost`** na string de conexão indica que o MongoDB está na sua máquina local.
-* **`nome_do_banco`**: substitua pelo nome do seu banco de dados MongoDB.
-* **`nome_da_colecao`**: substitua pela coleção (tabela) que deseja extrair os dados.
-* O `limit(100)` é só para trazer poucos dados de exemplo — ajuste ou remova conforme quiser.
+* `"dados.json"` → arquivo JSON de entrada.
+* Condição do `query()`.
+* `"dados_filtrados_json.json"` → arquivo JSON de saída.
 
 ---
 
-## 2. MongoDB Remoto (na internet)
+## 4. CSV da internet (exemplo API com CSV)
 
 ```python
-from pymongo import MongoClient
+# 1. Importar a biblioteca
 import pandas as pd
 
-# Exemplo de string de conexão com usuário e senha para um MongoDB remoto
-uri = "mongodb+srv://usuario:senha@cluster0.mongodb.net/nome_do_banco?retryWrites=true&w=majority"
+# 2. Ler (extrair) arquivo CSV diretamente da URL
+url = "https://exemplo.com/dados.csv"
+df = pd.read_csv(url)
 
-cliente = MongoClient(uri)
-
-db = cliente["nome_do_banco"]
-colecao = db["nome_da_colecao"]
-
-dados = list(colecao.find().limit(100))
-df = pd.json_normalize(dados)
-
+# Mostrar informações do DataFrame original (antes do filtro)
+df.info()
 print(df.head())
 
-df.to_csv("dados_mongodb_remoto.csv", index=False)
+# 3. Filtrar os dados (ex: só vendas com valor_total > 100)
+df_filtrado = df.query("valor_total > 100")
 
-print("Exportação remota finalizada!")
+# Mostrar informações do DataFrame filtrado
+df_filtrado.info()
+print(df_filtrado.head())
 
-cliente.close()
+# 4. Salvar o novo DataFrame filtrado em CSV localmente
+df_filtrado.to_csv("dados_filtrados_api.csv", index=False)
 ```
 
-### O que mudar para usar:
+**O que mudar:**
 
-* **`usuario` e `senha`**: coloque seu usuário e senha do MongoDB Atlas (ou outro serviço remoto).
-* **`cluster0.mongodb.net`**: substitua pelo endereço do seu cluster remoto (normalmente fornecido no dashboard do serviço).
-* **`nome_do_banco` e `nome_da_colecao`**: igual ao local, escolha seu banco e coleção.
-* A string de conexão `mongodb+srv://` é o padrão para conexões seguras em nuvem.
+* `url` → URL real do arquivo CSV.
+* Condição do `query()`.
+* `"dados_filtrados_api.csv"` → arquivo CSV de saída.
 
 ---
 
-### Dicas importantes:
+## 5. MySQL
 
-* Antes de rodar, **instale as dependências:**
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+import pymysql
 
-```bash
-pip install pymongo pandas
+# 2. Criar conexão com o banco MySQL
+con = pymysql.connect(
+    host='localhost',
+    user='usuario',
+    password='senha',
+    database='meu_banco'
+)
+
+# 3. Escrever consulta SQL (query)
+consulta = """
+SELECT * FROM vendas
+WHERE valor_total > 100
+"""
+
+# 4. Extrair dados com pandas usando a conexão e a query
+df = pd.read_sql(consulta, con)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em CSV
+df.to_csv("mysql_filtrado.csv", index=False)
 ```
 
-* Para o MongoDB remoto, garanta que seu IP está autorizado no dashboard do serviço (ex: MongoDB Atlas).
-* Se a coleção tiver muitos dados, considere paginar ou filtrar os dados na consulta para não sobrecarregar a memória.
+**O que mudar:**
+
+* `'localhost'`, `'usuario'`, `'senha'`, `'meu_banco'` → dados da sua conexão MySQL.
+* `consulta` → SQL que você quer executar (nome da tabela, colunas e filtro).
+* `"mysql_filtrado.csv"` → nome do arquivo CSV para salvar os dados extraídos.
+
+---
+
+## 6. PostgreSQL
+
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+import psycopg2
+
+# 2. Criar conexão com PostgreSQL
+con = psycopg2.connect(
+    host='localhost',
+    user='usuario',
+    password='senha',
+    dbname='meu_banco'
+)
+
+# 3. Escrever consulta SQL
+consulta = """
+SELECT * FROM vendas
+WHERE valor_total > 100
+"""
+
+# 4. Extrair dados com pandas usando a conexão e a query
+df = pd.read_sql(consulta, con)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em CSV
+df.to_csv("postgres_filtrado.csv", index=False)
+```
+
+**O que mudar:**
+
+* `'localhost'`, `'usuario'`, `'senha'`, `'meu_banco'` → dados da conexão PostgreSQL.
+* `consulta` → SQL que você quer executar.
+* `"postgres_filtrado.csv"` → nome do arquivo CSV para salvar.
+
+---
+
+## 7. SQLite
+
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+import sqlite3
+
+# 2. Criar conexão com SQLite
+con = sqlite3.connect("meubanco.db")
+
+# 3. Escrever consulta SQL
+consulta = """
+SELECT * FROM vendas
+WHERE valor_total > 100
+"""
+
+# 4. Extrair dados com pandas usando a conexão e a query
+df = pd.read_sql(consulta, con)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em CSV
+df.to_csv("sqlite_filtrado.csv", index=False)
+```
+
+**O que mudar:**
+
+* `"meubanco.db"` → caminho do arquivo do banco SQLite.
+* `consulta` → SQL que deseja executar.
+* `"sqlite_filtrado.csv"` → nome do arquivo CSV para salvar.
+
+---
+
+## 8. SQL Server
+
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+import pyodbc
+
+# 2. Criar conexão com SQL Server
+con = pyodbc.connect(
+    'DRIVER={SQL Server};SERVER=localhost;DATABASE=meu_banco;UID=usuario;PWD=senha'
+)
+
+# 3. Escrever consulta SQL
+consulta = """
+SELECT * FROM vendas
+WHERE valor_total > 100
+"""
+
+# 4. Extrair dados com pandas usando a conexão e a query
+df = pd.read_sql(consulta, con)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em CSV
+df.to_csv("sqlserver_filtrado.csv", index=False)
+```
+
+**O que mudar:**
+
+* String de conexão `'DRIVER=...;SERVER=...;DATABASE=...;UID=...;PWD=...'` com seus dados.
+* `consulta` → SQL a ser executada.
+* `"sqlserver_filtrado.csv"` → nome do arquivo CSV para salvar.
+
+---
+
+## 9. Oracle
+
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+import cx_Oracle
+
+# 2. Criar conexão com Oracle
+con = cx_Oracle.connect("usuario/senha@localhost:1521/XE")
+
+# 3. Escrever consulta SQL
+consulta = """
+SELECT * FROM vendas
+WHERE valor_total > 100
+"""
+
+# 4. Extrair dados com pandas usando a conexão e a query
+df = pd.read_sql(consulta, con)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em CSV
+df.to_csv("oracle_filtrado.csv", index=False)
+```
+
+**O que mudar:**
+
+* `"usuario/senha@localhost:1521/XE"` → string de conexão Oracle com seus dados.
+* `consulta` → SQL desejada.
+* `"oracle_filtrado.csv"` → nome do arquivo CSV para salvar.
+
+---
+
+## 10. MongoDB (local)
+
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+from pymongo import MongoClient
+
+# 2. Criar conexão com MongoDB local
+client = MongoClient("mongodb://localhost:27017/")
+db = client["meu_banco"]
+colecao = db["vendas"]
+
+# 3. Buscar dados filtrando com query MongoDB
+dados = list(colecao.find({ "valor_total": { "$gt": 100 } }))
+
+# 4. Criar DataFrame a partir dos dados
+df = pd.DataFrame(dados)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em JSON
+df.to_json("mongodb_local.json", orient="records")
+```
+
+**O que mudar:**
+
+* `"mongodb://localhost:27017/"` → string de conexão do MongoDB local.
+* `"meu_banco"` e `"vendas"` → banco e coleção.
+* Query MongoDB no `find()` para filtrar os dados.
+* `"mongodb_local.json"` → nome do arquivo JSON para salvar.
+
+---
+
+## 11. MongoDB (remoto)
+
+```python
+# 1. Importar bibliotecas
+import pandas as pd
+from pymongo import MongoClient
+
+# 2. Criar conexão com MongoDB remoto
+client = MongoClient("mongodb+srv://usuario:senha@cluster.mongodb.net/?retryWrites=true&w=majority")
+db = client["meu_banco"]
+colecao = db["vendas"]
+
+# 3. Buscar dados filtrando com query MongoDB
+dados = list(colecao.find({ "valor_total": { "$gt": 100 } }))
+
+# 4. Criar DataFrame a partir dos dados
+df = pd.DataFrame(dados)
+
+# Mostrar informações do DataFrame
+df.info()
+
+# Mostrar as primeiras linhas para inspeção rápida
+print(df.head())
+
+# 5. Salvar resultado em JSON
+df.to_json("mongodb_remoto.json", orient="records")
+```
+
+**O que mudar:**
+
+* `"mongodb+srv://usuario:senha@cluster.mongodb.net/..."` → string de conexão do MongoDB remoto.
+* `"meu_banco"` e `"vendas"` → banco e coleção.
+* Query MongoDB no `find()`.
+* `"mongodb_remoto.json"` → nome do arquivo JSON para salvar.
