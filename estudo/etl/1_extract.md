@@ -152,7 +152,7 @@ pip install pandas
 
 ---
 
-## 5. API JSON da Internet
+## 5. JSON da internet (exemplo API com JSON)
 
 ```python
 # 1. Importar bibliotecas
