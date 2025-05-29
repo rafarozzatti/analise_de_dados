@@ -230,9 +230,6 @@ df_filtrado.to_csv("dados_filtrados.csv", index=False)
 print("Arquivo CSV filtrado exportado com sucesso!")
 ```
 ---
-Perfeito, Rafael! Aqui estão os **códigos completos com explicações detalhadas**, organizados exatamente no padrão que você pediu: **primeiro o código completo, depois a explicação clara sobre cada parte**. Assim você pode **copiar e colar tudo junto** no seu arquivo `.md` ou `.txt` para estudar e reutilizar.
-
----
 
 ## 8. Extração de **CSV**
 
