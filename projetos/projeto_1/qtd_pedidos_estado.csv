@@ -1,0 +1,16 @@
+estado,status_pagamento,total_pedidos
+AL,Pendente,1
+AM,Pago,2
+BA,Pago,1
+CE,Pago,1
+CE,Pendente,1
+GO,Pago,1
+MA,Pago,1
+MG,Pago,2
+PA,Pago,1
+PE,Pago,1
+PR,Pago,1
+RJ,Pago,1
+RN,Pago,1
+RS,Pago,2
+SP,Pago,3
