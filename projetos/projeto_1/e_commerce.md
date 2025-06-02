@@ -288,9 +288,9 @@ import pymysql
 # 2. Criar conexão com o banco MySQL
 conexao = pymysql.connect(
     host='localhost',
-    user='root',
-    password='Rafa17@2',
-    database='e_commerce'
+    user='usuario',
+    password='senha',
+    database='meu_banco'
 )
 
 try:
@@ -350,72 +350,23 @@ finally:
 
 #### 📁 `total_pedidos_faturamento.csv`
 
-total_de_pedidos,faturamento_geral
-20,30650.0
+* [total\_pedidos\_faturamento.csv](./total_pedidos_faturamento.csv)
 
 #### 📁 `faturamento_mensal.csv`
 
-ano,mes,faturamento_mensal
-2023,4,16750.0
-2023,5,5400.0
-2023,6,8500.0
+* [faturamento\_mensal.csv](./faturamento_mensal.csv)
 
 #### 📁 `produtos_mais_vendidos.csv`
 
-produto,quantidade
-Fone Bluetooth JBL,5.0
-Mouse Logitech,5.0
-Smartphone Samsung,4.0
-"Monitor LG 24""",4.0
-Roteador TP-Link,4.0
-Webcam Logitech,4.0
-Notebook Dell,3.0
-Teclado Mecânico,3.0
-Cadeira Gamer,3.0
-Caixa de Som JBL,3.0
-Smartwatch Xiaomi,2.0
-Microfone Blue,2.0
-Tablet Samsung,1.0
-HD Externo 1TB,1.0
-Câmera GoPro,1.0
+* [produtos\_mais\_vendidos.csv](./produtos_mais_vendidos.csv)
 
 #### 📁 `clientes_compras.csv`
 
-nome,total_gasto
-Ana Silva,6900.0
-Amanda Rocha,4400.0
-Juliana Martins,3400.0
-Fernanda Costa,2600.0
-Carlos Souza,2500.0
-Patrícia Dias,2200.0
-Lucas Almeida,1500.0
-Thiago Santos,1500.0
-Pedro Oliveira,1350.0
-Bruno Pereira,1000.0
-Ricardo Fernandes,900.0
-Larissa Castro,800.0
-Mariana Lima,700.0
-Eduardo Gomes,600.0
-Camila Moreira,300.0
+* [clientes\_compras.csv](./clientes_compras.csv)
 
 #### 📁 `qtd_pedidos_estado.csv`
 
-estado,status_pagamento,total_pedidos
-AL,Pendente,1
-AM,Pago,2
-BA,Pago,1
-CE,Pago,1
-CE,Pendente,1
-GO,Pago,1
-MA,Pago,1
-MG,Pago,2
-PA,Pago,1
-PE,Pago,1
-PR,Pago,1
-RJ,Pago,1
-RN,Pago,1
-RS,Pago,2
-SP,Pago,3
+* [qtd\_pedidos\_estado.csv](./qtd_pedidos_estado.csv)
 
 ---
 
