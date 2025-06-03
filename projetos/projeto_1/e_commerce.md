@@ -372,4 +372,4 @@ finally:
 
 ### Parte dos Gráficos
 
-*A ser desenvolvida.*
+![alt text](image.png)
