@@ -372,4 +372,6 @@ finally:
 
 ### Parte dos Gráficos
 
-![alt text](image.png)
+#### Dashboard
+
+![alt text](image-1.png)
