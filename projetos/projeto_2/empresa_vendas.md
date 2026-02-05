@@ -217,6 +217,6 @@ DIVIDE(
 
 ## 🎯 Principais Insights
 
-* Produtos do **Açougue** possuem maior faturamento
+* **Carne** foi o produto com maior faturamento
 * **Campinas** apresentou maior faturamento entre as cidades
 * Variação clara de vendas ao longo do período analisado
