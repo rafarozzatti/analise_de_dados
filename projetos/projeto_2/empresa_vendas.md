@@ -173,29 +173,45 @@ Faturamento Total = SUM(base_analitica[valor_total])
 * **Quantidade Total**
 
 ```DAX
-Faturamento Total = SUM(base_analitica[valor_total])
+Quantidade Total = SUM(base_analitica[quantidade])
 ```
 
 * **Ticket Médio**
 
 ```DAX
-Faturamento Total = SUM(base_analitica[valor_total])
+Ticket Médio = 
+DIVIDE(
+    [Faturamento Total],
+    [Quantidade Total]
+)
 ```
 
 ---
 
-## 📊 Visualizações Criadas
+## 📊 Dashboard
 
-* KPIs:
+![alt text](image-8.png)
 
-  * Faturamento Total
-  * Quantidade Total
-  * Ticket Médio
-* Gráficos:
+* Por produto:
 
-  * Faturamento por Produto
-  * Faturamento por Cidade
-  * Evolução do Faturamento ao longo do tempo
+  * Carne:
+  ![alt text](image.png)
+  * Arroz:
+  ![alt text](image-1.png)
+  * Feijão:
+  ![alt text](image-2.png)
+  * Leite:
+  ![alt text](image-3.png)
+  * Refrigerante:
+  ![alt text](image-4.png)
+* Por cidade:
+
+  * Campinas:
+  ![alt text](image-5.png)
+  * São Paulo:
+  ![alt text](image-6.png)
+  * Rio de Janeiro:
+  ![alt text](image-7.png)
 
 ---
 
