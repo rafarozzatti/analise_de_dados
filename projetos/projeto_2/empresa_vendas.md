@@ -153,6 +153,7 @@ INNER JOIN clientes c ON v.id_cliente = c.id;
 """
 
 df = pd.read_sql(query, conexao)
+
 df.to_csv("base_analitica.csv", index=False)
 ```
 
